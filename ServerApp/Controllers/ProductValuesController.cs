@@ -4,9 +4,12 @@ using ServerApp.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ServerApp.Models.BindingTargets;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace ServerApp.Controllers
 {
+
     [Route("api/products")]
     [ApiController]
     public class ProductValuesController : ControllerBase
@@ -93,6 +96,67 @@ namespace ServerApp.Controllers
             else
             {
                 return query;
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CreateProduct(ProductData pData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Product p = pData.Product;
+            if (p.Supplier != null && p.Supplier.SupplierId != 0)
+            {
+                _context.Attach(p.Supplier);
+            }
+            _context.Add(p);
+            _context.SaveChanges();
+            return Ok(p.ProductId);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult ReplaceProduct(long id, ProductData pData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Product p = pData.Product;
+            p.ProductId = id;
+            if (p.Supplier != null && p.Supplier.SupplierId != 0)
+            {
+                _context.Attach(p.Supplier);
+            }
+            _context.Update(p);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult UpdateProduct(long id, 
+            JsonPatchDocument<ProductData> patch)
+        {
+            Product product = _context.Products
+                .Include(p => p.Supplier)
+                .First(p => p.ProductId == id);
+            ProductData pData = new ProductData { Product = product };
+
+            patch.ApplyTo(pData, ModelState);
+
+            if (ModelState.IsValid && TryValidateModel(pData))
+            {
+                if (product.Supplier != null && product.Supplier.SupplierId  != 0)
+                {
+                    _context.Attach(product.Supplier);
+                }
+                _context.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
             }
         }
     }

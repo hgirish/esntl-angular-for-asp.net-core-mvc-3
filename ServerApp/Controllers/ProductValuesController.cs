@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerApp.Models;
 using System.Collections;
@@ -158,6 +158,13 @@ namespace ServerApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+        }
+
+        [HttpDelete("{id}")]
+        public void DeleteProduct(long id)
+        {
+            _context.Products.Remove(new Product { ProductId = id });
+            _context.SaveChanges();
         }
     }
 }

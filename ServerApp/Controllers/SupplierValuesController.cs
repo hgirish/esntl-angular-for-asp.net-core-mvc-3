@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ServerApp.Models;
 using ServerApp.Models.BindingTargets;
 using System.Collections.Generic;
@@ -48,6 +48,13 @@ namespace ServerApp.Controllers
             _context.Update(s);
             _context.SaveChanges();
             return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public void DeleteSupplier(long id)
+        {
+            _context.Suppliers.Remove(new Supplier { SupplierId = id });
+            _context.SaveChanges();
         }
     }
 }

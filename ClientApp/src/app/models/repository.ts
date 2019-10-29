@@ -74,30 +74,51 @@ export class Repository {
           this.createProduct(prod);
         }
       })
-    }
+  }
 
-    replaceProduct(prod: Product) {
-        let data = {
-            name: prod.name,
-            category: prod.category,
-            description: prod.description,
-            price: prod.price,
-            supplier: prod.supplier ? prod.supplier.supplierId : 0
-        };
-        this.http.put(`${productUrl}/${prod.productId}`, data)
-            .subscribe(() => this.getProducts());
-    }
+  replaceProduct(prod: Product) {
+    let data = {
+      name: prod.name,
+      category: prod.category,
+      description: prod.description,
+      price: prod.price,
+      supplier: prod.supplier ? prod.supplier.supplierId : 0
+    };
+    this.http.put(`${productUrl}/${prod.productId}`, data)
+      .subscribe(() => this.getProducts());
+  }
 
-    replaceSupplier(supp: Supplier) {
-        let data = {
-            name: supp.name,
-            city: supp.city,
-            state: supp.state
-        };
+  replaceSupplier(supp: Supplier) {
+    let data = {
+      name: supp.name,
+      city: supp.city,
+      state: supp.state
+    };
 
-        this.http.put(`${supplierUrl}/${supp.supplierId}`, data)
-            .subscribe(() => this.getProducts());
-    }
+    this.http.put(`${supplierUrl}/${supp.supplierId}`, data)
+      .subscribe(() => this.getProducts());
+  }
+
+  updateProduct(id: number, changes: Map<string, any>) {
+    let patch = [];
+    changes.forEach((value, key) =>
+      patch.push({ op: "replace", path: key, value: value }));
+    this.http.patch(`${productUrl}/${id}`, patch)
+      .subscribe(() => this.getProducts());
+  }
+
+  deleteProduct(id: number) {
+    this.http.delete(`${productUrl}/${id}`)
+      .subscribe(() => this.getProducts());
+  }
+
+  deleteSupplier(id: number) {
+    this.http.delete(`${supplierUrl}/${id}`)
+      .subscribe(() => {
+        this.getProducts();
+        this.getSuppliers();
+      })
+  }
 
 
 }

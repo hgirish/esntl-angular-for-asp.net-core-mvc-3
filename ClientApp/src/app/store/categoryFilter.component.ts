@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
-import { Repository } from '../models/repository';
+
+import { NavigationService } from '../models/navigation.service';
 
 @Component({
   selector: 'store-categoryfilter',
@@ -8,7 +9,7 @@ import { Repository } from '../models/repository';
 export class CategoryFilterComponent {
 
 
-  constructor(private repo: Repository) { }
+  constructor(public service: NavigationService) { }
 
 
 }

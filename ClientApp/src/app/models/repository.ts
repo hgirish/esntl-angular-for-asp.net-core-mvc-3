@@ -7,18 +7,25 @@ import { Supplier } from './supplier.model';
 const productUrl = "/api/products";
 const supplierUrl = "/api/suppliers";
 
+type productsMetadata = {
+  data: Product[],
+  categories: string[]
+}
+
 
 @Injectable()
 export class Repository {
   product: Product;
   products: Product[];
   suppliers: Supplier[] = [];
+  categories: string[] = [];
   filter: Filter = new Filter();
+
+
 
   constructor(
     private http: HttpClient
   ) {
-    //this.filter.category = "soccer";
     this.filter.related = true;
     this.getProducts();
   }
@@ -37,8 +44,13 @@ export class Repository {
     if (this.filter.search) {
       url += `&search=${this.filter.search}`;
     }
-    this.http.get<Product[]>(url)
-      .subscribe(prods => this.products = prods);
+    url += "&metadata=true";
+
+    this.http.get<productsMetadata>(url)
+      .subscribe(md => {
+        this.products = md.data;
+        this.categories = md.categories;
+      });
   }
 
   getSuppliers() {

@@ -5,6 +5,7 @@ import { ProductSelectionComponent } from './store/productSelection.component';
 
 
 const routes: Routes = [
+  { path: 'store/:category', component: ProductSelectionComponent },
   { path: 'store', component: ProductSelectionComponent },
   { path: '', redirectTo: '/store', pathMatch: 'full' }
 ];

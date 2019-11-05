@@ -1,7 +1,7 @@
 import { Product } from './product.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Filter } from './configClasses.repository';
+import { Filter, Pagination } from './configClasses.repository';
 import { Supplier } from './supplier.model';
 
 const productUrl = "/api/products";
@@ -20,14 +20,14 @@ export class Repository {
   suppliers: Supplier[] = [];
   categories: string[] = [];
   filter: Filter = new Filter();
-
+  paginationObject = new Pagination();
 
 
   constructor(
     private http: HttpClient
   ) {
     this.filter.related = true;
-    this.getProducts();
+
   }
 
   getProduct(id: number) {

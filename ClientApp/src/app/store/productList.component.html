@@ -2,6 +2,7 @@
   <div *ngFor="let product of products" class="card m-1 p-1 bg-light">
     <h4>
       {{product.name}}
+      <store-ratings [product]="product"></store-ratings>
       <span class="float-right badge badge-pill badge-primary">
         {{product.price | currency:"USD":"symbol"}}
       </span>

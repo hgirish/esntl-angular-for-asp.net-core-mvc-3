@@ -4,18 +4,14 @@ import { Injectable } from '@angular/core';
 import { Filter, Pagination } from './configClasses.repository';
 import { Supplier } from './supplier.model';
 import { Observable } from 'rxjs';
-import { Order, OrderConfirmation } from './order.model';
+import { Order } from './order.model';
+import { OrderConfirmation } from './OrderConfirmation';
+import { ProductsMetadata } from './productsMetadata';
 
 const productUrl = '/api/products';
 const supplierUrl = '/api/suppliers';
 const sessionUrl = '/api/session';
 const ordersUrl = '/api/orders';
-
-interface productsMetadata {
-  data: Product[],
-  categories: string[]
-};
-
 
 @Injectable()
 export class Repository {
@@ -51,7 +47,7 @@ export class Repository {
     }
     url += '&metadata=true';
 
-    this.http.get<productsMetadata>(url)
+    this.http.get<ProductsMetadata>(url)
       .subscribe(md => {
         this.products = md.data;
         this.categories = md.categories;

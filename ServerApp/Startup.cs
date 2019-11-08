@@ -40,6 +40,8 @@ namespace ServerApp
                 })
                 .AddNewtonsoftJson();
 
+            services.AddRazorPages();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
@@ -97,6 +99,7 @@ namespace ServerApp
             });
 
             app.UseSession();
+         
 
             app.UseRouting();
 
@@ -113,12 +116,19 @@ namespace ServerApp
                     pattern: "{target:regex(store|cart|checkout)}/{*catchall}",
                     defaults: new { controller = "Home", action = "Index" });
 
-                endpoints.MapFallbackToClientSideBlazor<BlazorApp.Startup>(
-                    "blazor/{*path:nonfile}", "index.html");
+                endpoints.MapControllerRoute(
+                    name:"blazor_integration",
+                    pattern:"/blazor/{*path:nonfile}",
+                    defaults: new {controller="Home", action="Blazor"}
+                    );
+
+                endpoints.MapRazorPages();
             });
 
             app.Map("/blazor", opts =>
             opts.UseClientSideBlazorFiles<BlazorApp.Startup>());
+            app.UseClientSideBlazorFiles<BlazorApp.Startup>();
+
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>

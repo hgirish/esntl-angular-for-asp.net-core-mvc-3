@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,10 @@ namespace ServerApp.Controllers
         {
             return View(_context.Products.First());
         }
-
+        public IActionResult Blazor()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

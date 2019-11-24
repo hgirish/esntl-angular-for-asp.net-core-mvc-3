@@ -37,7 +37,7 @@ export class Repository {
         this.product = p;
       });
   }
-  getProducts() {
+  getProducts(): Promise<ProductsMetadata> {
     let url = `${productUrl}?related=${this.filter.related}`;
     if (this.filter.category) {
       url += `&category=${this.filter.category}`;
@@ -47,10 +47,12 @@ export class Repository {
     }
     url += '&metadata=true';
 
-    this.http.get<ProductsMetadata>(url)
-      .subscribe(md => {
+    return this.http.get<ProductsMetadata>(url)
+      .toPromise<ProductsMetadata>()
+      .then(md => {
         this.products = md.data;
         this.categories = md.categories;
+        return md;
       });
   }
 

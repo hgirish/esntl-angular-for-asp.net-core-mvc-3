@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace ServerApp.Controllers
 {
+    [Route("api/orders")]
+    [ApiController]
     public class OrderValuesController : Controller
     {
         private readonly DataContext _context;

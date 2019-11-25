@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,11 @@ namespace ServerApp
                 Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(connectionString));
+
+            services.AddDbContext<IdentityDataContext>(options =>
+            options.UseSqlServer(Configuration["ConnectionStrings:Identity"]));
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityDataContext>();
 
             services.AddControllersWithViews()
                 .AddJsonOptions(options =>
@@ -98,10 +104,11 @@ namespace ServerApp
                     "../BlazorApp/wwwroot"))
             });
 
-            app.UseSession();
-         
+            app.UseSession();         
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -153,6 +160,7 @@ namespace ServerApp
             });
 
             SeedData.SeedDatabase(services.GetRequiredService<DataContext>());
+            IdentitySeedData.SeedDatabase(services).Wait();
         }
     }
 }

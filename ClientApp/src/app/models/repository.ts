@@ -167,5 +167,13 @@ export class Repository {
       .subscribe(() => this.getOrders());
   }
 
+  login(name: string, password: string): Observable<boolean> {
+    return this.http.post<boolean>("/api/account/login", { name: name, password: password });
+  }
+
+  logout() {
+    this.http.post("/api/account/logout", null).subscribe(response => { });
+  }
+
 
 }

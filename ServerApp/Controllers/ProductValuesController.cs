@@ -7,11 +7,13 @@ using System.Linq;
 using ServerApp.Models.BindingTargets;
 using Microsoft.AspNetCore.JsonPatch;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServerApp.Controllers
 {
 
     [Route("api/products")]
+    [Authorize(Roles = "Administrator")]
     [ApiController]
     public class ProductValuesController : ControllerBase
     {
@@ -22,7 +24,7 @@ namespace ServerApp.Controllers
             _context = context;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")][AllowAnonymous]
         public Product GetProduct(long id)
         {
             //System.Threading.Thread.Sleep(5000);
@@ -57,7 +59,7 @@ namespace ServerApp.Controllers
             return result;
 
         }
-        [HttpGet]
+        [HttpGet][AllowAnonymous]
         public IActionResult GetProducts(
             string category, string search,
             bool related = false, bool metadata = false)
@@ -76,7 +78,7 @@ namespace ServerApp.Controllers
                 p.Description.ToLower().Contains(searchLower));
             }
 
-            if (related)
+            if (related && HttpContext.User.IsInRole("Administrator"))
             {
                 query = query.Include(p => p.Supplier)
                     .Include(p => p.Ratings);

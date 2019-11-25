@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerApp.Models;
@@ -7,8 +8,9 @@ using System.Linq;
 namespace ServerApp.Controllers
 {
     [Route("api/orders")]
+    [Authorize(Roles ="Administrator")]
     [ApiController]
-    public class OrderValuesController : Controller
+    public class OrderValuesController : ControllerBase
     {
         private readonly DataContext _context;
 
@@ -35,7 +37,7 @@ namespace ServerApp.Controllers
                 _context.SaveChanges();
             }
         }
-        [HttpPost]
+        [HttpPost][AllowAnonymous]
         public IActionResult CreateOrder(Order order)
         {
             if (!ModelState.IsValid)

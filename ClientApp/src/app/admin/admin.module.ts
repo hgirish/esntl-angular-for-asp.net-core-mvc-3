@@ -7,10 +7,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductEditorComponent } from './productEditor.component';
+import { AuthenticationComponent } from '../auth/authentication.component';
+import { AuthenticationGuard } from '../auth/authentication.guard';
+import { AuthModule } from '../auth/auth.module';
 
 const routes: Routes = [
+  { path: "login", component: AuthenticationComponent },
   {
     path: '', component: AdminComponent,
+    canActivateChild: [AuthenticationGuard],
     children: [
       {
         path: 'products', component: ProductAdminComponent
@@ -26,7 +31,8 @@ const routes: Routes = [
     RouterModule,
     FormsModule,
     RouterModule.forChild(routes),
-    CommonModule
+    CommonModule,
+    AuthModule
   ],
   declarations: [AdminComponent,
     OverviewComponent,

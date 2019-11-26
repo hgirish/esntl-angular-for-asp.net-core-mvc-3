@@ -9,7 +9,7 @@ namespace ServerApp.Controllers
 {
     [Route("api/orders")]
     [Authorize(Roles ="Administrator")]
-    [ApiController]
+    [ApiController][AutoValidateAntiforgeryToken]
     public class OrderValuesController : ControllerBase
     {
         private readonly DataContext _context;

@@ -14,7 +14,7 @@ namespace ServerApp.Controllers
 
     [Route("api/products")]
     [Authorize(Roles = "Administrator")]
-    [ApiController]
+    [ApiController][AutoValidateAntiforgeryToken]
     public class ProductValuesController : ControllerBase
     {
         private readonly DataContext _context;
